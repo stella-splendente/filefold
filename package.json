@@ -10,6 +10,7 @@
     "e2e": "playwright test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@vitest/coverage-v8": "^5.0.1",
     "fflate": "^0.8.3",

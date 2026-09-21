@@ -1,4 +1,3 @@
-import { heicToPngOnMainThread, isHeic } from "@filekit/core";
 import type { ToolDefinition, ToolOption } from "./types";
 
 const IMAGES = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/heic", "image/heif", ".png", ".jpg", ".jpeg", ".webp", ".avif", ".heic", ".heif"];
@@ -44,6 +43,7 @@ export const IMAGE_TOOLS: ToolDefinition[] = [
 
 /** HEIC 는 워커가 못 읽으므로(document 필요) 메인 스레드에서 PNG 로 먼저 바꾼다. 이름은 유지. */
 async function prepare(f: File): Promise<File> {
+  const { heicToPngOnMainThread, isHeic } = await import("@filekit/core");
   if (!isHeic(f)) return f;
   const png = await heicToPngOnMainThread(f);
   const stem = f.name.replace(/\.[^.]+$/, "") || "image";

@@ -1,5 +1,5 @@
-import en from "./en.json";
-import ko from "./ko.json";
+import en from "./en.json" with { type: "json" };
+import ko from "./ko.json" with { type: "json" };
 
 export type Locale = "en" | "ko";
 type Dict = Record<string, unknown>;

@@ -5,7 +5,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { TOOLS, t, type Locale } from "@filekit/ui";
+import { TOOLS } from "@filekit/ui/tools";
+import { t, type Locale } from "@filekit/ui/i18n";
 
 const SUITES = ["pdf", "image", "audio"] as const;
 const OUT = path.resolve(import.meta.dirname, "../../dist/listing");
