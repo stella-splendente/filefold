@@ -30,7 +30,7 @@
 |---|---|---|
 | PDF | 병합, 분할, 압축(내장 이미지 재압축), 이미지→PDF, PDF→이미지, 회전, 페이지 순서 변경, 페이지 삭제 | pdf-lib, pdfjs-dist |
 | 이미지 | 변환(HEIC, PNG, JPG, WebP, AVIF 상호), 압축, 크기 조절 | jSquash wasm 코덱, libheif wasm |
-| 오디오 | 변환(m4a, wav, mp3, ogg 상호), 자르기, 압축, 동영상 파일에서 오디오 추출 | ffmpeg.wasm 단일 스레드 빌드 |
+| 오디오 | 변환(입력 mp3/wav/ogg/flac/m4a 등 → 출력 mp3/wav/m4a. 동봉 ffmpeg 코어에 vorbis 인코더가 없어 OGG 출력은 v1 제외), 자르기, 압축, 동영상 파일에서 오디오 추출 | ffmpeg.wasm 단일 스레드 빌드 |
 
 Chrome/Edge/Firefox 동시 지원. Manifest V3. 원격 코드 없음(wasm은 패키지에 동봉). 스위트 단위로 나눈 이유는 Chrome "단일 목적" 정책 준수와 스토어 첫 등록 횟수(3×3=9회) 최소화의 균형이다.
 

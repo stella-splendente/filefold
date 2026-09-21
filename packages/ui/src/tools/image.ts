@@ -46,7 +46,8 @@ export const IMAGE_TOOLS: ToolDefinition[] = [
 async function prepare(f: File): Promise<File> {
   if (!isHeic(f)) return f;
   const png = await heicToPngOnMainThread(f);
-  return new File([png], f.name, { type: "image/png" });
+  const stem = f.name.replace(/\.[^.]+$/, "") || "image";
+  return new File([png], `${stem}.png`, { type: "image/png" });
 }
 
 /** 여러 파일이면 각각 처리해 zip 으로, 하나면 그대로. */

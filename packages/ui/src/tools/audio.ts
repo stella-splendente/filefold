@@ -8,7 +8,7 @@ const asFmt = (v: unknown, fallback: Fmt = "mp3"): Fmt => (["mp3", "wav", "ogg",
 
 const format: ToolOption = {
   key: "to", type: "select", labelKey: "options.format", default: "mp3",
-  choices: [{ value: "mp3", label: "MP3" }, { value: "wav", label: "WAV" }, { value: "ogg", label: "OGG" }, { value: "m4a", label: "M4A" }],
+  choices: [{ value: "mp3", label: "MP3" }, { value: "wav", label: "WAV" }, { value: "m4a", label: "M4A" }],
 };
 const bitrate: ToolOption = {
   key: "bitrate", type: "select", labelKey: "options.bitrate", default: "192",

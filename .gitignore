@@ -16,3 +16,4 @@ ruvector.db
 .output/
 test-results/
 playwright-report/
+dist/

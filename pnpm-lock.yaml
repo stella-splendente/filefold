@@ -389,6 +389,22 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)
 
+  tooling:
+    dependencies:
+      '@filekit/core':
+        specifier: workspace:*
+        version: link:../packages/core
+      '@filekit/license':
+        specifier: workspace:*
+        version: link:../packages/license
+      '@filekit/ui':
+        specifier: workspace:*
+        version: link:../packages/ui
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.63.0
+        version: 1.63.0
+
 packages:
 
   '@1natsu/wait-element@4.2.0':

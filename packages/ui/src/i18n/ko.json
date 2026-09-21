@@ -133,7 +133,7 @@
     },
     "convert-audio": {
       "name": "오디오 변환",
-      "description": "MP3, WAV, OGG, M4A를 브라우저에서 변환합니다."
+      "description": "MP3, WAV, OGG, FLAC, M4A를 MP3, WAV, M4A로 브라우저에서 변환합니다."
     },
     "mp4-to-mp3": {
       "name": "MP4를 MP3로",

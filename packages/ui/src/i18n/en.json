@@ -133,7 +133,7 @@
     },
     "convert-audio": {
       "name": "Convert Audio",
-      "description": "Convert between MP3, WAV, OGG and M4A in your browser."
+      "description": "Convert MP3, WAV, OGG, FLAC and M4A to MP3, WAV or M4A in your browser."
     },
     "mp4-to-mp3": {
       "name": "MP4 to MP3",

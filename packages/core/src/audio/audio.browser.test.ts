@@ -25,13 +25,8 @@ describe("audio (browser, ffmpeg.wasm)", () => {
     expect(await duration(result.blob)).toBeCloseTo(1, 0);
   }, 120_000);
 
-  it("wav → ogg 변환 (코어에 vorbis 인코더가 있으면 통과, 없으면 UNSUPPORTED_FORMAT)", async () => {
-    try {
-      const result = await convertAudio(wavBlob(1), { to: "ogg", bitrateKbps: 64 });
-      expect(result.blob.type).toBe("audio/ogg");
-    } catch (err) {
-      expect((err as { code?: string }).code).toBe("UNSUPPORTED_FORMAT");
-    }
+  it("ogg 출력은 UNSUPPORTED_FORMAT (코어에 vorbis 인코더 없음)", async () => {
+    await expect(convertAudio(wavBlob(1), { to: "ogg", bitrateKbps: 64 })).rejects.toMatchObject({ code: "UNSUPPORTED_FORMAT" });
   }, 120_000);
 
   it("trimAudio 0.2~0.7초 → 약 0.5초", async () => {
