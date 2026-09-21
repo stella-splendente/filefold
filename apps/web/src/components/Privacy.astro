@@ -1,0 +1,44 @@
+---
+import { t, type Locale } from "@filekit/ui";
+import Base from "../layouts/Base.astro";
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = [{ locale: "en" as Locale, path: "/privacy/" }, { locale: "ko" as Locale, path: "/ko/privacy/" }];
+---
+<Base locale={locale} title={`Privacy — ${t(locale, "brand")}`} description={t(locale, "tagline")} alternates={alternates}>
+  {locale === "ko" ? (
+    <article>
+      <h1>개인정보 처리방침</h1>
+      <p>최종 수정: 2026-09-21</p>
+      <h2>수집하는 정보</h2>
+      <p>Filefold 웹사이트와 확장 프로그램은 개인정보를 수집하지 않습니다. 계정도 없습니다.</p>
+      <h2>파일 처리</h2>
+      <p>모든 파일 처리는 사용자의 브라우저 안에서 이루어집니다. 파일은 어떤 서버로도 전송되지 않으며, 저희는 파일을 받을 서버 자체를 운영하지 않습니다.</p>
+      <h2>저장되는 데이터</h2>
+      <p>무료 사용 횟수와 라이선스 상태만 브라우저의 로컬 저장소(확장: chrome.storage.local, 웹: localStorage)에 저장됩니다. 이 데이터는 사용자 기기를 떠나지 않습니다.</p>
+      <h2>결제</h2>
+      <p>Pro 구매는 결제대행사 Polar(polar.sh)가 처리합니다. 결제 시 입력하는 정보는 Polar의 <a href="https://polar.sh/legal/privacy" rel="noopener">개인정보처리방침</a>을 따릅니다. 라이선스 키 검증 시 키와 조직 ID만 Polar 서버로 전송되며 파일이나 개인정보는 포함되지 않습니다.</p>
+      <h2>분석</h2>
+      <p>웹사이트는 쿠키 없는 Cloudflare Web Analytics만 사용할 수 있으며, 확장 프로그램에는 분석 코드가 없습니다.</p>
+      <h2>문의</h2>
+      <p>확장 스토어의 지원 링크를 통해 문의할 수 있습니다.</p>
+    </article>
+  ) : (
+    <article>
+      <h1>Privacy Policy</h1>
+      <p>Last updated: 2026-09-21</p>
+      <h2>What we collect</h2>
+      <p>The Filefold website and extensions collect no personal data. There are no accounts.</p>
+      <h2>File processing</h2>
+      <p>All processing happens inside your browser. Files are never transmitted to any server; we do not operate a server that could receive them.</p>
+      <h2>Data stored on your device</h2>
+      <p>Only your free-plan usage counter and license state are stored locally (extension: chrome.storage.local, web: localStorage). This data never leaves your device.</p>
+      <h2>Payments</h2>
+      <p>Pro purchases are handled by Polar (polar.sh) as merchant of record. Information you enter at checkout is governed by Polar's <a href="https://polar.sh/legal/privacy" rel="noopener">privacy policy</a>. License validation sends only the key and our organization ID to Polar; no files or personal data are included.</p>
+      <h2>Analytics</h2>
+      <p>The website may use cookie-free Cloudflare Web Analytics. The extensions contain no analytics code.</p>
+      <h2>Contact</h2>
+      <p>Use the support link on the extension store listing.</p>
+    </article>
+  )}
+</Base>

@@ -13,3 +13,6 @@ playwright-report/
 .swarm/
 ruvector.db
 .claude/
+.output/
+test-results/
+playwright-report/

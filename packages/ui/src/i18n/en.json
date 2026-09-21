@@ -27,7 +27,7 @@
     "INTERNAL": "Unexpected error: {message}"
   },
   "quota": {
-    "TOO_MANY_FILES": "Free plan processes one file at a time. Pro handles batches.",
+    "TOO_MANY_FILES": "Free plan handles up to 3 files per run. Pro has no limit.",
     "FILE_TOO_LARGE": "Free plan allows files up to 25 MB. Pro allows up to 2 GB.",
     "DAILY_LIMIT": "Free plan allows 10 runs per day. Pro has no limit.",
     "dailyLimit": "{n} free runs left today",
@@ -79,7 +79,7 @@
     "q1": "Are my files uploaded anywhere?",
     "a1": "No. Processing happens entirely inside your browser. We have no server that could receive your files.",
     "q2": "Is it free?",
-    "a2": "Yes. The free plan processes one file at a time, up to 25 MB, 10 runs a day. Pro removes those limits with a one-time purchase.",
+    "a2": "Yes. The free plan handles up to 3 files per run, 25 MB each, 10 runs a day. Pro removes those limits with a one-time purchase.",
     "q3": "Does it work offline?",
     "a3": "The extension works offline. The website needs one load, then the tool itself runs without a connection."
   }

@@ -4,9 +4,12 @@ import type { CoreApi } from "./api";
 
 export type RemoteCore = Remote<CoreApi>;
 
-/** 앱은 `new URL("@filekit/core/worker", import.meta.url)` 로 워커 URL 을 만든다. */
-export function createCore(workerUrl: URL | string): RemoteCore {
-  const worker = new Worker(workerUrl, { type: "module" });
+/**
+ * 워커는 core 패키지 안의 상대 경로로 만든다.
+ * Vite/WXT 가 `new Worker(new URL("./entry.ts", import.meta.url))` 패턴을 빌드 시 번들한다.
+ */
+export function createCore(): RemoteCore {
+  const worker = new Worker(new URL("./entry.ts", import.meta.url), { type: "module" });
   return wrap<CoreApi>(worker);
 }
 

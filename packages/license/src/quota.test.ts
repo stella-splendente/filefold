@@ -10,10 +10,11 @@ function memoryStore(): KVStore {
 const DAY = 86_400_000;
 
 describe("Quota", () => {
-  it("free 는 파일 2개면 TOO_MANY_FILES", async () => {
+  it("free 는 파일 3개까지 허용하고 4개면 TOO_MANY_FILES", async () => {
     const q = new Quota(memoryStore(), () => 0);
 
-    expect(await q.check("free", [{ size: 1 }, { size: 1 }])).toEqual({ ok: false, reason: "TOO_MANY_FILES" });
+    expect(await q.check("free", [{ size: 1 }, { size: 1 }, { size: 1 }])).toEqual({ ok: true });
+    expect(await q.check("free", [{ size: 1 }, { size: 1 }, { size: 1 }, { size: 1 }])).toEqual({ ok: false, reason: "TOO_MANY_FILES" });
   });
 
   it("free 는 25MB 초과면 FILE_TOO_LARGE", async () => {

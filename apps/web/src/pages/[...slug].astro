@@ -1,0 +1,10 @@
+---
+import ToolPage from "../components/ToolPage.astro";
+import { toolRoutes } from "../lib/routes";
+
+export function getStaticPaths() {
+  return toolRoutes().map((r) => ({ params: { slug: r.slug }, props: { locale: r.locale, tool: r.tool } }));
+}
+const { locale, tool } = Astro.props;
+---
+<ToolPage locale={locale} tool={tool} />

@@ -1,0 +1,14 @@
+---
+import { t, type Locale } from "@filekit/ui";
+import Base from "../layouts/Base.astro";
+import LicenseIsland from "./LicenseIsland";
+import { BUNDLE_URL, POLAR_BENEFITS, POLAR_ORG_ID, checkoutUrl } from "../lib/env";
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = [{ locale: "en" as Locale, path: "/license/" }, { locale: "ko" as Locale, path: "/ko/license/" }];
+---
+<Base locale={locale} title={`${t(locale, "license.title")} — ${t(locale, "brand")}`} description={t(locale, "tagline")} alternates={alternates}>
+  <div class="ff-shell">
+    <LicenseIsland client:load locale={locale} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkoutUrl("pdf")} bundleUrl={BUNDLE_URL} />
+  </div>
+</Base>

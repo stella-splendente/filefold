@@ -1,6 +1,6 @@
 import type { KVStore, Tier } from "./types";
 
-export const FREE_LIMITS = { maxFiles: 1, maxFileBytes: 26_214_400, dailyOps: 10 } as const;
+export const FREE_LIMITS = { maxFiles: 3, maxFileBytes: 26_214_400, dailyOps: 10 } as const;
 export const PRO_LIMITS = { maxFiles: Infinity, maxFileBytes: 2_147_483_648, dailyOps: Infinity } as const;
 
 export type QuotaReason = "TOO_MANY_FILES" | "FILE_TOO_LARGE" | "DAILY_LIMIT";

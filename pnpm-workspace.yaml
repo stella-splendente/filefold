@@ -2,3 +2,12 @@ packages:
   - "packages/*"
   - "apps/*"
   - "tooling"
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - "@parcel/watcher"
+  - rolldown
+  - wxt
+  - ext-pdf
+  - ext-image
+  - ext-audio

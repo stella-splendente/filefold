@@ -1,0 +1,54 @@
+---
+import "@filekit/ui/styles.css";
+import { t, type Locale } from "@filekit/ui";
+import { homePath } from "../lib/routes";
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  alternates?: { locale: Locale; path: string }[];
+  jsonLd?: Record<string, unknown>;
+}
+const { locale, title, description, alternates = [], jsonLd } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.locale} href={new URL(a.path, Astro.site)} />)}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#3b6fd6" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <style>
+      body { margin: 0; }
+      .site-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: var(--space) calc(var(--space) * 1.5); border-bottom: 1px solid var(--color-surface-2); }
+      .site-header a { color: inherit; text-decoration: none; font-weight: 700; letter-spacing: -0.01em; }
+      .site-header nav { display: flex; gap: 1rem; font-size: 0.9rem; }
+      .site-main { max-width: 960px; margin: 0 auto; padding: var(--space) calc(var(--space) * 1.5) calc(var(--space) * 3); }
+      .site-footer { padding: var(--space) calc(var(--space) * 1.5); font-size: 0.85rem; color: var(--color-muted); border-top: 1px solid var(--color-surface-2); }
+      .site-footer a { color: inherit; }
+    </style>
+  </head>
+  <body class="ff">
+    <header class="site-header">
+      <a href={homePath(locale)}>{t(locale, "brand")}</a>
+      <nav aria-label="Main navigation">
+        {alternates.map((a) => a.locale !== locale && <a href={a.path}>{a.locale === "ko" ? "한국어" : "English"}</a>)}
+        <a href={locale === "en" ? "/license/" : "/ko/license/"}>{t(locale, "license.title")}</a>
+      </nav>
+    </header>
+    <main class="site-main"><slot /></main>
+    <footer class="site-footer">
+      <p>{t(locale, "tagline")} · <a href={locale === "en" ? "/privacy/" : "/ko/privacy/"}>Privacy</a></p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+---
+import { t, toolsBySuite, type Locale, type ToolDefinition } from "@filekit/ui";
+import Base from "../layouts/Base.astro";
+import ToolIsland from "./ToolIsland";
+import { toolPath } from "../lib/routes";
+import { toolDescription, toolJsonLd, toolTitle } from "../lib/seo";
+import { POLAR_BENEFITS, POLAR_ORG_ID, checkoutUrl, storeUrl } from "../lib/env";
+
+interface Props { locale: Locale; tool: ToolDefinition }
+const { locale, tool } = Astro.props;
+const alternates = (["en", "ko"] as Locale[]).map((l) => ({ locale: l, path: toolPath(l, tool.id) }));
+const url = new URL(toolPath(locale, tool.id), Astro.site).toString();
+const others = toolsBySuite(tool.suite).filter((x) => x.id !== tool.id);
+const stores = (["chrome", "edge", "firefox"] as const).map((b) => ({ b, url: storeUrl(b, tool.suite) })).filter((s) => s.url);
+const checkout = checkoutUrl(tool.suite);
+---
+<Base locale={locale} title={toolTitle(locale, tool)} description={toolDescription(locale, tool)} alternates={alternates} jsonLd={toolJsonLd(locale, tool, url)}>
+  <ToolIsland client:load locale={locale} toolId={tool.id} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkout} />
+
+  {stores.length > 0 && (
+    <section aria-labelledby="install-title" style="margin-top: 2rem;">
+      <h2 id="install-title">{t(locale, "common.installExtension")}</h2>
+      <p>{stores.map((s) => <a class="ff-btn ff-btn--ghost" href={s.url} rel="noopener" style="margin-right:.5rem">{s.b}</a>)}</p>
+    </section>
+  )}
+
+  <section aria-labelledby="faq-title" style="margin-top: 2rem;">
+    <h2 id="faq-title">FAQ</h2>
+    {[1, 2, 3].map((n) => (
+      <details><summary><strong>{t(locale, `faq.q${n}`)}</strong></summary><p>{t(locale, `faq.a${n}`)}</p></details>
+    ))}
+  </section>
+
+  <section aria-labelledby="others-title" style="margin-top: 2rem;">
+    <h2 id="others-title">{t(locale, "common.otherTools")}</h2>
+    <ul class="ff-list">
+      {others.map((x) => (
+        <li><a class="ff-card" href={toolPath(locale, x.id)}><h3>{t(locale, `tools.${x.id}.name`)}</h3><p>{t(locale, `tools.${x.id}.description`)}</p></a></li>
+      ))}
+    </ul>
+  </section>
+</Base>

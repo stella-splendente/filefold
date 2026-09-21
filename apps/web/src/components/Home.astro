@@ -1,0 +1,27 @@
+---
+import { TOOLS, t, type Locale } from "@filekit/ui";
+import Base from "../layouts/Base.astro";
+import { homePath, toolPath } from "../lib/routes";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = (["en", "ko"] as Locale[]).map((l) => ({ locale: l, path: homePath(l) }));
+const suites = ["pdf", "image", "audio"] as const;
+---
+<Base locale={locale} title={`${t(locale, "brand")} — ${t(locale, "tagline")}`} description={t(locale, "suites.pdf.description")} alternates={alternates}>
+  <h1 style="font-size: clamp(2rem, 1rem + 4vw, 3.5rem); line-height: 1.1; margin: 1rem 0 .5rem;">{t(locale, "tagline")}</h1>
+  <p class="ff-note" style="font-size: 1.1rem; max-width: 40ch;">{t(locale, "common.privacyNote")}</p>
+  {suites.map((s) => {
+    const tools = TOOLS.filter((x) => x.suite === s);
+    return tools.length > 0 && (
+      <section aria-labelledby={`suite-${s}`} style="margin-top: 2.5rem;">
+        <h2 id={`suite-${s}`}>{t(locale, `suites.${s}.name`)}</h2>
+        <ul class="ff-list">
+          {tools.map((x) => (
+            <li><a class="ff-card" href={toolPath(locale, x.id)}><h3>{t(locale, `tools.${x.id}.name`)}</h3><p>{t(locale, `tools.${x.id}.description`)}</p></a></li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+</Base>

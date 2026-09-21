@@ -1,0 +1,18 @@
+{
+  "name": "@filekit/ext-shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./ext-runtime": "./ext-runtime.ts",
+    "./wxt-suite": "./wxt-suite.ts"
+  },
+  "dependencies": {
+    "@filekit/core": "workspace:*",
+    "@filekit/license": "workspace:*",
+    "@filekit/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.0"
+  }
+}
