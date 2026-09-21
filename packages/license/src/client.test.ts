@@ -36,12 +36,12 @@ function make(opts: { fetch?: typeof fetch; now?: () => number; store?: KVStore 
 
 describe("LicenseClient.activate", () => {
   it("활성화에 성공하면 pro 상태를 저장한다", async () => {
-    const fetch = vi.fn(async (url: string, init: RequestInit) => {
+    const fetchMock = vi.fn(async (url: string, init: RequestInit) => {
       expect(url).toBe("https://api.polar.sh/v1/customer-portal/license-keys/activate");
       expect(JSON.parse(init.body as string)).toMatchObject({ key: "KEY-1", organization_id: ORG, label: "chrome" });
       return jsonResponse(200, activated());
     }) as unknown as typeof fetch;
-    const { client } = make({ fetch });
+    const { client } = make({ fetch: fetchMock });
 
     const state = await client.activate("KEY-1", "chrome");
 
@@ -50,8 +50,8 @@ describe("LicenseClient.activate", () => {
   });
 
   it("묶음 benefit 이면 세 스위트 모두 pro", async () => {
-    const fetch = vi.fn(async () => jsonResponse(200, activated("ben_bundle"))) as unknown as typeof fetch;
-    const { client } = make({ fetch });
+    const fetchMock = vi.fn(async () => jsonResponse(200, activated("ben_bundle"))) as unknown as typeof fetch;
+    const { client } = make({ fetch: fetchMock });
 
     const state = await client.activate("KEY-2", "chrome");
 
@@ -59,23 +59,23 @@ describe("LicenseClient.activate", () => {
   });
 
   it("키가 틀리면 INVALID_KEY 로 거부하고 free 로 남는다", async () => {
-    const fetch = vi.fn(async () => jsonResponse(404, { detail: "not found" })) as unknown as typeof fetch;
-    const { client } = make({ fetch });
+    const fetchMock = vi.fn(async () => jsonResponse(404, { detail: "not found" })) as unknown as typeof fetch;
+    const { client } = make({ fetch: fetchMock });
 
     await expect(client.activate("BAD", "chrome")).rejects.toMatchObject({ code: "INVALID_KEY" });
     expect(await client.getState()).toMatchObject({ tier: "free", suites: [] });
   });
 
   it("기기 초과(403)는 LIMIT_REACHED", async () => {
-    const fetch = vi.fn(async () => jsonResponse(403, { detail: "limit" })) as unknown as typeof fetch;
-    const { client } = make({ fetch });
+    const fetchMock = vi.fn(async () => jsonResponse(403, { detail: "limit" })) as unknown as typeof fetch;
+    const { client } = make({ fetch: fetchMock });
 
     await expect(client.activate("KEY-1", "chrome")).rejects.toMatchObject({ code: "LIMIT_REACHED" });
   });
 
   it("네트워크 실패는 NETWORK", async () => {
-    const fetch = vi.fn(async () => { throw new TypeError("offline"); }) as unknown as typeof fetch;
-    const { client } = make({ fetch });
+    const fetchMock = vi.fn(async () => { throw new TypeError("offline"); }) as unknown as typeof fetch;
+    const { client } = make({ fetch: fetchMock });
 
     await expect(client.activate("KEY-1", "chrome")).rejects.toMatchObject({ code: "NETWORK" });
   });
@@ -84,8 +84,8 @@ describe("LicenseClient.activate", () => {
 describe("LicenseClient.getState 재검증", () => {
   async function proClient(now: { t: number }, fetchImpl: (url: string) => Promise<Response>) {
     const calls: string[] = [];
-    const fetch = vi.fn(async (url: string) => { calls.push(url); return fetchImpl(url); }) as unknown as typeof fetch;
-    const { client } = make({ fetch, now: () => now.t });
+    const fetchMock = vi.fn(async (url: string) => { calls.push(url); return fetchImpl(url); }) as unknown as typeof fetch;
+    const { client } = make({ fetch: fetchMock, now: () => now.t });
     await client.activate("KEY-1", "chrome");
     return { client, calls };
   }
