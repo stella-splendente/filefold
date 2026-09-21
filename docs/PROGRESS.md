@@ -10,7 +10,7 @@
 | 3 | core PDF 회전/순서/삭제/이미지/압축 | 완료 |
 | 4 | license 패키지 | 완료 |
 | 5 | ui 패키지 | 미착수 |
-| 6 | core Worker RPC | 미착수 |
+| 6 | core Worker RPC | 완료 |
 | 7 | ext-pdf | 미착수 |
 | 8 | web PDF 페이지 | 미착수 |
 | 9 | 배포 파이프라인 | 미착수 |
