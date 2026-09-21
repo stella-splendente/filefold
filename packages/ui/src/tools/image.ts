@@ -1,3 +1,4 @@
+import { heicToPngOnMainThread, isHeic } from "@filekit/core";
 import type { ToolDefinition, ToolOption } from "./types";
 
 const IMAGES = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/heic", "image/heif", ".png", ".jpg", ".jpeg", ".webp", ".avif", ".heic", ".heif"];
@@ -41,17 +42,24 @@ export const IMAGE_TOOLS: ToolDefinition[] = [
   },
 ];
 
+/** HEIC 는 워커가 못 읽으므로(document 필요) 메인 스레드에서 PNG 로 먼저 바꾼다. 이름은 유지. */
+async function prepare(f: File): Promise<File> {
+  if (!isHeic(f)) return f;
+  const png = await heicToPngOnMainThread(f);
+  return new File([png], f.name, { type: "image/png" });
+}
+
 /** 여러 파일이면 각각 처리해 zip 으로, 하나면 그대로. */
 async function runEach(
   files: File[],
   onProgress: Parameters<ToolDefinition["run"]>[2],
   one: (f: File) => Promise<{ blob: Blob; filename: string; meta?: Record<string, unknown> }>,
 ) {
-  if (files.length === 1) return one(files[0]);
+  if (files.length === 1) return one(await prepare(files[0]));
   const { zipResults } = await import("@filekit/core");
   const entries = [];
   for (const [i, f] of files.entries()) {
-    const r = await one(f);
+    const r = await one(await prepare(f));
     entries.push({ name: r.filename, data: new Uint8Array(await r.blob.arrayBuffer()) });
     onProgress({ done: i + 1, total: files.length });
   }

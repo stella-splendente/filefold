@@ -11,22 +11,20 @@ export function isHeic(file: Blob & { name?: string }): boolean {
 
 /** 무엇이든 ImageData 로. HEIC 는 heic-to, 나머지는 브라우저 디코더. */
 export async function decodeImage(file: Blob & { name?: string }): Promise<ImageData> {
+  if (isHeic(file)) {
+    throw new CoreError("UNSUPPORTED_FORMAT", "HEIC 는 메인 스레드에서 먼저 PNG 로 변환해야 합니다 (heicToPngOnMainThread)");
+  }
   try {
-    const source = isHeic(file) ? await heicToPng(file) : file;
-    const bitmap = await createImageBitmap(source);
+    const bitmap = await createImageBitmap(file);
     const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
     const ctx = canvas.getContext("2d")!;
     ctx.drawImage(bitmap, 0, 0);
     bitmap.close();
     return ctx.getImageData(0, 0, canvas.width, canvas.height);
   } catch (err) {
-    throw new CoreError("CORRUPT_FILE", `이미지를 읽을 수 없습니다: ${(err as Error).message}`);
+    const detail = err instanceof Error ? err.message : String((err as { message?: string } | null)?.message ?? err ?? "unknown");
+    throw new CoreError("CORRUPT_FILE", `이미지를 읽을 수 없습니다: ${detail}`);
   }
-}
-
-async function heicToPng(file: Blob): Promise<Blob> {
-  const { heicTo } = await import("heic-to");
-  return heicTo({ blob: file, type: "image/png", quality: 1 });
 }
 
 /** 파일 시그니처로 원본 포맷 추정 (compress 가 포맷을 유지할 때 사용). */

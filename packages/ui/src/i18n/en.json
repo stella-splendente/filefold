@@ -63,7 +63,10 @@
     "height": "Height (px, 0 = auto)",
     "fit": "Fit",
     "fitContain": "Fit inside",
-    "fitCover": "Fill and crop"
+    "fitCover": "Fill and crop",
+    "bitrate": "Bitrate",
+    "startSec": "Start (seconds)",
+    "endSec": "End (seconds)"
   },
   "suites": {
     "pdf": {
@@ -127,6 +130,26 @@
     "resize-image": {
       "name": "Resize Image",
       "description": "Scale images to an exact width or height."
+    },
+    "convert-audio": {
+      "name": "Convert Audio",
+      "description": "Convert between MP3, WAV, OGG and M4A in your browser."
+    },
+    "mp4-to-mp3": {
+      "name": "MP4 to MP3",
+      "description": "Pull the audio out of a video file as an MP3, with no upload."
+    },
+    "extract-audio": {
+      "name": "Extract Audio from Video",
+      "description": "Save the soundtrack of MP4, WebM or MOV as an audio file."
+    },
+    "trim-audio": {
+      "name": "Trim Audio",
+      "description": "Cut a clip out of an audio file by start and end time."
+    },
+    "compress-audio": {
+      "name": "Compress Audio",
+      "description": "Shrink an audio file by lowering its bitrate."
     }
   },
   "faq": {

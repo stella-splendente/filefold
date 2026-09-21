@@ -185,6 +185,34 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(@types/node@24.13.6)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0))
 
+  apps/ext-audio:
+    dependencies:
+      '@filekit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@filekit/ext-shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@filekit/license':
+        specifier: workspace:*
+        version: link:../../packages/license
+      '@filekit/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      comlink:
+        specifier: ^4.4.2
+        version: 4.4.2
+      preact:
+        specifier: ^10.29.8
+        version: 10.29.8(preact-render-to-string@6.7.0)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.6
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0))
+      wxt:
+        specifier: ^0.21.4
+        version: 0.21.4(esbuild@0.28.2)(rolldown@1.2.9)(typescript@5.9.3)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0))
+
   apps/ext-image:
     dependencies:
       '@filekit/core':

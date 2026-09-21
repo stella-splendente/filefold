@@ -20,6 +20,10 @@ describe("TOOLS (pdf)", () => {
     expect(toolsBySuite("image").find((t) => t.id === "heic-to-jpg")?.preset).toEqual({ to: "jpeg" });
   });
 
+  it("audio 스위트에 5개 도구가 있다", () => {
+    expect(toolsBySuite("audio").map((t) => t.id).sort()).toEqual(["compress-audio", "convert-audio", "extract-audio", "mp4-to-mp3", "trim-audio"]);
+  });
+
   it("모든 도구가 en/ko 이름·설명·키워드를 가진다", () => {
     for (const tool of TOOLS) {
       for (const dict of [en, ko] as unknown as Record<string, Record<string, unknown>>[]) {

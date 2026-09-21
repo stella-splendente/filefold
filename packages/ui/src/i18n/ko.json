@@ -63,7 +63,10 @@
     "height": "높이 (px, 0 = 자동)",
     "fit": "맞춤 방식",
     "fitContain": "안에 맞춤",
-    "fitCover": "채우고 자르기"
+    "fitCover": "채우고 자르기",
+    "bitrate": "비트레이트",
+    "startSec": "시작 (초)",
+    "endSec": "끝 (초)"
   },
   "suites": {
     "pdf": {
@@ -127,6 +130,26 @@
     "resize-image": {
       "name": "이미지 크기 조절",
       "description": "원하는 너비나 높이로 정확히 맞춥니다."
+    },
+    "convert-audio": {
+      "name": "오디오 변환",
+      "description": "MP3, WAV, OGG, M4A를 브라우저에서 변환합니다."
+    },
+    "mp4-to-mp3": {
+      "name": "MP4를 MP3로",
+      "description": "동영상에서 오디오만 MP3로 뽑아냅니다. 업로드 없음."
+    },
+    "extract-audio": {
+      "name": "동영상에서 오디오 추출",
+      "description": "MP4, WebM, MOV의 사운드트랙을 오디오 파일로 저장합니다."
+    },
+    "trim-audio": {
+      "name": "오디오 자르기",
+      "description": "시작·끝 시각으로 구간을 잘라냅니다."
+    },
+    "compress-audio": {
+      "name": "오디오 압축",
+      "description": "비트레이트를 낮춰 용량을 줄입니다."
     }
   },
   "faq": {

@@ -1,11 +1,12 @@
 import type { Suite } from "@filekit/license";
 import { PDF_TOOLS } from "./pdf";
 import { IMAGE_TOOLS } from "./image";
+import { AUDIO_TOOLS } from "./audio";
 import type { ToolDefinition } from "./types";
 
 export * from "./types";
 
-export const TOOLS: ToolDefinition[] = [...PDF_TOOLS, ...IMAGE_TOOLS];
+export const TOOLS: ToolDefinition[] = [...PDF_TOOLS, ...IMAGE_TOOLS, ...AUDIO_TOOLS];
 
 export function toolsBySuite(suite: Suite): ToolDefinition[] {
   return TOOLS.filter((t) => t.suite === suite);
