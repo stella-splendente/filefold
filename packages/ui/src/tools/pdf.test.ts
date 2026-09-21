@@ -17,7 +17,7 @@ describe("TOOLS (pdf)", () => {
 
   it("모든 도구가 en/ko 이름·설명·키워드를 가진다", () => {
     for (const tool of TOOLS) {
-      for (const dict of [en, ko] as Record<string, Record<string, unknown>>[]) {
+      for (const dict of [en, ko] as unknown as Record<string, Record<string, unknown>>[]) {
         expect(dict.tools, tool.id).toHaveProperty(tool.id);
         const entry = (dict.tools as Record<string, Record<string, string>>)[tool.id];
         expect(entry.name.length, `${tool.id} name`).toBeGreaterThan(0);
