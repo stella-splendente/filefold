@@ -23,5 +23,5 @@ export function stem(file: Blob & { name?: string }, fallback = "audio"): string
 
 export function extOf(file: Blob & { name?: string }): string {
   const m = (file.name ?? "").match(/\.([a-z0-9]+)$/i);
-  return m ? m[1].toLowerCase() : "bin";
+  return m?.[1] ? m[1].toLowerCase() : "bin";
 }

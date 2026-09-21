@@ -1,6 +1,6 @@
 /**
  * 스토어용 스크린샷 1280×800 을 각 확장의 tools 페이지에서 찍는다.
- * 사전 조건: apps/ext-*/.output/chrome-mv3 빌드. 출력: dist/listing/<suite>/screenshots/*.png
+ * 사전 조건: apps/ext-<suite>/.output/chrome-mv3 빌드. 출력: dist/listing/<suite>/screenshots/ 아래 png
  * 실행: pnpm --filter @filekit/tooling screenshots
  */
 import fs from "node:fs";

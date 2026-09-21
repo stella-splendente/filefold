@@ -6,7 +6,11 @@
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./components": "./src/components/index.ts",
     "./tools": "./src/tools/index.ts",
+    "./tools/pdf": "./src/tools/pdf.ts",
+    "./tools/image": "./src/tools/image.ts",
+    "./tools/audio": "./src/tools/audio.ts",
     "./i18n": "./src/i18n/index.ts",
     "./styles.css": "./src/styles.css"
   },

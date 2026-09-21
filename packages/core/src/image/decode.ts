@@ -2,12 +2,9 @@ import { CoreError } from "../types";
 
 export type ImageFormat = "jpeg" | "png" | "webp" | "avif";
 
-const HEIC_TYPES = new Set(["image/heic", "image/heif", "image/heic-sequence", "image/heif-sequence"]);
+import { isHeic } from "./heic";
 
-export function isHeic(file: Blob & { name?: string }): boolean {
-  if (HEIC_TYPES.has(file.type)) return true;
-  return /\.(heic|heif)$/i.test(file.name ?? "");
-}
+export { isHeic };
 
 /** 무엇이든 ImageData 로. HEIC 는 heic-to, 나머지는 브라우저 디코더. */
 export async function decodeImage(file: Blob & { name?: string }): Promise<ImageData> {

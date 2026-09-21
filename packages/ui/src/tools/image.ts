@@ -43,7 +43,7 @@ export const IMAGE_TOOLS: ToolDefinition[] = [
 
 /** HEIC 는 워커가 못 읽으므로(document 필요) 메인 스레드에서 PNG 로 먼저 바꾼다. 이름은 유지. */
 async function prepare(f: File): Promise<File> {
-  const { heicToPngOnMainThread, isHeic } = await import("@filekit/core");
+  const { heicToPngOnMainThread, isHeic } = await import("@filekit/core/heic");
   if (!isHeic(f)) return f;
   const png = await heicToPngOnMainThread(f);
   const stem = f.name.replace(/\.[^.]+$/, "") || "image";
@@ -57,7 +57,7 @@ async function runEach(
   one: (f: File) => Promise<{ blob: Blob; filename: string; meta?: Record<string, unknown> }>,
 ) {
   if (files.length === 1) return one(await prepare(files[0]));
-  const { zipResults } = await import("@filekit/core");
+  const { zipResults } = await import("@filekit/core/zip");
   const entries = [];
   for (const [i, f] of files.entries()) {
     const r = await one(await prepare(f));

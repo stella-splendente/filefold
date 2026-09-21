@@ -1,0 +1,1 @@
+{ "extends": "../tsconfig.base.json", "compilerOptions": { "types": ["node"], "jsx": "preserve", "allowImportingTsExtensions": true }, "include": ["listing/*.ts", "debug/*.mjs"] }

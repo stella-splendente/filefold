@@ -1,9 +1,10 @@
 import { render } from "preact";
 import "@filekit/ui/styles.css";
-import { LicensePanel } from "@filekit/ui";
+import { LicensePanel } from "@filekit/ui/components";
 import { createExtRuntime } from "@filekit/ext-shared/ext-runtime";
 
-const rt = createExtRuntime("pdf", import.meta.env as Record<string, string | undefined>);
+const worker = new Worker(new URL("../../worker.ts", import.meta.url), { type: "module" });
+const rt = createExtRuntime("pdf", import.meta.env as Record<string, string | undefined>, worker);
 
 render(
   <div class="ff-shell">

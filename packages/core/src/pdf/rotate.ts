@@ -12,7 +12,7 @@ export async function rotatePdf(file: Blob, by: RotationDegrees, pages?: number[
   assertPagesInRange(targets, all.length);
 
   for (const n of targets) {
-    const page = all[n - 1];
+    const page = all[n - 1]!;
     page.setRotation(degrees((page.getRotation().angle + by) % 360));
   }
 

@@ -1,15 +1,18 @@
 import { render } from "preact";
 import { useState } from "preact/hooks";
 import "@filekit/ui/styles.css";
-import { ToolList, ToolShell, t, toolById, toolsBySuite } from "@filekit/ui";
+import { ToolList, ToolShell } from "@filekit/ui/components";
+import { t } from "@filekit/ui/i18n";
+import { IMAGE_TOOLS } from "@filekit/ui/tools/image";
 import { createExtRuntime } from "@filekit/ext-shared/ext-runtime";
 
-const rt = createExtRuntime("image", import.meta.env as Record<string, string | undefined>);
-const tools = toolsBySuite("image");
+const worker = new Worker(new URL("../../worker.ts", import.meta.url), { type: "module" });
+const rt = createExtRuntime("image", import.meta.env as Record<string, string | undefined>, worker);
+const tools = IMAGE_TOOLS;
 
 function App() {
   const initial = new URLSearchParams(location.search).get("tool");
-  const [tool, setTool] = useState(toolById(initial ?? "") ?? tools[0]);
+  const [tool, setTool] = useState(tools.find((x) => x.id === initial) ?? tools[0]!);
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 260px) minmax(0, 1fr)", gap: "var(--space)", padding: "var(--space)", maxWidth: "1100px", margin: "0 auto" }}>

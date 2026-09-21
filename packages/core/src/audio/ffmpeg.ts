@@ -1,3 +1,4 @@
+/// <reference path="../vite-env.d.ts" />
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { CoreError } from "../types";
 

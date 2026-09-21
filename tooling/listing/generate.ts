@@ -1,6 +1,6 @@
 /**
  * 스토어 등록용 문구를 TOOLS·i18n 에서 생성한다.
- * 출력: dist/listing/<suite>/{en,ko}.md, privacy-justification.md
+ * 출력: dist/listing/<suite>/ 아래 en.md, ko.md, privacy-justification.md
  * 실행: pnpm --filter @filekit/tooling listing
  */
 import fs from "node:fs";

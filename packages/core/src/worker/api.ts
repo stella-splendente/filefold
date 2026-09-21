@@ -1,24 +1,11 @@
-import { compressPdf, deletePages, imagesToPdf, mergePdfs, pdfToImages, reorderPages, rotatePdf, splitPdf } from "../pdf";
-import { compressImage, convertImage, resizeImage } from "../image";
-import { compressAudio, convertAudio, extractAudio, trimAudio } from "../audio";
+import { audioApi } from "./api-audio";
+import { imageApi } from "./api-image";
+import { pdfApi } from "./api-pdf";
 
-/** 워커 안에서 노출되는 함수 표. onProgress 인자는 comlink.proxy 로 감싸서 넘긴다. */
-export const api = {
-  mergePdfs,
-  splitPdf,
-  rotatePdf,
-  reorderPages,
-  deletePages,
-  imagesToPdf,
-  pdfToImages,
-  compressPdf,
-  convertImage,
-  compressImage,
-  resizeImage,
-  convertAudio,
-  compressAudio,
-  extractAudio,
-  trimAudio,
-};
+/**
+ * 전체 함수 표(타입용). 실제 워커는 스위트별 엔트리(entry-pdf/image/audio) 하나만 노출해
+ * 각 확장 패키지가 자기 스위트의 엔진·wasm 만 동봉하도록 한다.
+ */
+export const api = { ...pdfApi, ...imageApi, ...audioApi };
 
 export type CoreApi = typeof api;

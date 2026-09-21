@@ -1,6 +1,6 @@
-import { createCore, type RemoteCore } from "@filekit/core";
+import { wrapCore, type RemoteCore } from "@filekit/core/client";
 import { LicenseClient, Quota, type BenefitMap, type KVStore, type Suite } from "@filekit/license";
-import { detectLocale, type Locale } from "@filekit/ui";
+import { detectLocale, type Locale } from "@filekit/ui/i18n";
 
 /** chrome.storage.local 을 KVStore 로 감싼다 (Firefox 도 chrome 네임스페이스 제공). */
 export function extensionStore(): KVStore {
@@ -27,12 +27,12 @@ function parseBenefits(raw: string | undefined): BenefitMap {
   try { return raw ? (JSON.parse(raw) as BenefitMap) : {}; } catch { return {}; }
 }
 
-export function createExtRuntime(suite: Suite, env: Record<string, string | undefined>): ExtRuntime {
+export function createExtRuntime(suite: Suite, env: Record<string, string | undefined>, worker: Worker): ExtRuntime {
   const store = extensionStore();
   const browserLabel = env.VITE_BROWSER ?? "chrome";
   return {
     locale: detectLocale(),
-    core: createCore(),
+    core: wrapCore(worker),
     license: new LicenseClient({ organizationId: env.VITE_POLAR_ORG_ID ?? "", benefits: parseBenefits(env.VITE_POLAR_BENEFITS), store }),
     quota: new Quota(store),
     suite,

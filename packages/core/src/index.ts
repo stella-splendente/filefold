@@ -5,4 +5,4 @@ export * from "./pdf";
 export * from "./image";
 export * from "./audio";
 export type { CoreApi } from "./worker/api";
-export { createCore, progressProxy, type RemoteCore } from "./worker/client";
+export { wrapCore, progressProxy, type RemoteCore } from "./worker/client";

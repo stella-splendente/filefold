@@ -1,5 +1,5 @@
 import { useMemo } from "preact/hooks";
-import { createCore } from "@filekit/core";
+import { wrapCore } from "@filekit/core/client";
 import { LicenseClient, Quota, type BenefitMap, type KVStore } from "@filekit/license";
 import { ToolShell, toolById, type Locale } from "@filekit/ui";
 
@@ -25,8 +25,13 @@ export default function ToolIsland({ locale, toolId, orgId, benefits, checkoutUr
     const store = localStore();
     let map: BenefitMap = {};
     try { map = JSON.parse(benefits) as BenefitMap; } catch { /* keep empty */ }
-    return { core: createCore(), license: new LicenseClient({ organizationId: orgId, benefits: map, store }), quota: new Quota(store) };
-  }, [orgId, benefits]);
+    const worker = tool?.suite === "image"
+      ? new Worker(new URL("../workers/image.ts", import.meta.url), { type: "module" })
+      : tool?.suite === "audio"
+        ? new Worker(new URL("../workers/audio.ts", import.meta.url), { type: "module" })
+        : new Worker(new URL("../workers/pdf.ts", import.meta.url), { type: "module" });
+    return { core: wrapCore(worker), license: new LicenseClient({ organizationId: orgId, benefits: map, store }), quota: new Quota(store) };
+  }, [orgId, benefits, tool?.suite]);
   if (!tool) return null;
   return <ToolShell locale={locale} tool={tool} core={rt.core} license={rt.license} quota={rt.quota} checkoutUrl={checkoutUrl} showHeader={false} />;
 }

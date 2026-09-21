@@ -1,6 +1,6 @@
 /**
  * 스위트별 아이콘: 둥근 사각 배경 + 흰 글리프 SVG 를 Chromium 으로 렌더해 16/32/48/128 PNG 로 저장.
- * 실행: pnpm --filter @filekit/tooling icons   (출력: apps/ext-<suite>/public/icon/*.png, apps/web/public/icon-<suite>.svg)
+ * 실행: pnpm --filter @filekit/tooling icons   (출력: apps/ext-<suite>/public/icon/ 아래 png, apps/web/public/icon-<suite>.svg)
  */
 import fs from "node:fs";
 import path from "node:path";

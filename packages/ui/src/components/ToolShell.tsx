@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import type { JobProgress, JobResult, RemoteCore, CoreApi } from "@filekit/core";
-import { progressProxy } from "@filekit/core";
+import type { JobProgress, JobResult, CoreApi } from "@filekit/core";
+import { progressProxy, type RemoteCore } from "@filekit/core/client";
 import type { LicenseClient, Quota, QuotaReason } from "@filekit/license";
 import { t, type Locale } from "../i18n";
 import type { OptionValue, ToolDefinition } from "../tools";

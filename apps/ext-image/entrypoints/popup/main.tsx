@@ -1,6 +1,7 @@
 import { render } from "preact";
 import "@filekit/ui/styles.css";
-import { detectLocale, t, toolsBySuite } from "@filekit/ui";
+import { detectLocale, t } from "@filekit/ui/i18n";
+import { IMAGE_TOOLS } from "@filekit/ui/tools/image";
 
 const locale = detectLocale();
 const open = (toolId?: string) => {
@@ -13,7 +14,7 @@ function Popup() {
   return (
     <div class="ff" style={{ padding: "0.75rem", display: "grid", gap: "0.5rem" }}>
       <strong>{t(locale, "suites.image.name")}</strong>
-      {toolsBySuite("image").map((tool) => (
+      {IMAGE_TOOLS.map((tool) => (
         <button key={tool.id} type="button" class="ff-btn ff-btn--ghost" style={{ textAlign: "left" }} onClick={() => open(tool.id)}>
           {t(locale, `tools.${tool.id}.name`)}
         </button>

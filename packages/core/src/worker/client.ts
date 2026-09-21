@@ -5,11 +5,10 @@ import type { CoreApi } from "./api";
 export type RemoteCore = Remote<CoreApi>;
 
 /**
- * 워커는 core 패키지 안의 상대 경로로 만든다.
- * Vite/WXT 가 `new Worker(new URL("./entry.ts", import.meta.url))` 패턴을 빌드 시 번들한다.
+ * 앱이 만든 Worker 를 감싼다. 워커 파일은 앱 쪽에서 `new Worker(new URL("./worker.ts", import.meta.url), { type: "module" })`
+ * 로 만들고, 그 파일은 `@filekit/core/worker/<suite>` 를 import 한다. 그래야 번들러가 앱마다 필요한 엔진만 동봉한다.
  */
-export function createCore(): RemoteCore {
-  const worker = new Worker(new URL("./entry.ts", import.meta.url), { type: "module" });
+export function wrapCore(worker: Worker): RemoteCore {
   return wrap<CoreApi>(worker);
 }
 
