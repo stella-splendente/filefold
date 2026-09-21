@@ -1,0 +1,46 @@
+name: deploy-web
+on:
+  push:
+    branches: [main]
+    paths: ["apps/web/**", "packages/**", "pnpm-lock.yaml", ".github/workflows/deploy-web.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  deployments: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          PUBLIC_POLAR_ORG_ID: ${{ vars.POLAR_ORG_ID }}
+          PUBLIC_POLAR_BENEFITS: ${{ vars.POLAR_BENEFITS }}
+          PUBLIC_POLAR_CHECKOUT_PDF: ${{ vars.POLAR_CHECKOUT_PDF }}
+          PUBLIC_POLAR_CHECKOUT_IMAGE: ${{ vars.POLAR_CHECKOUT_IMAGE }}
+          PUBLIC_POLAR_CHECKOUT_AUDIO: ${{ vars.POLAR_CHECKOUT_AUDIO }}
+          PUBLIC_POLAR_CHECKOUT_BUNDLE: ${{ vars.POLAR_CHECKOUT_BUNDLE }}
+          PUBLIC_STORE_CHROME_PDF: ${{ vars.STORE_CHROME_PDF }}
+          PUBLIC_STORE_EDGE_PDF: ${{ vars.STORE_EDGE_PDF }}
+          PUBLIC_STORE_FIREFOX_PDF: ${{ vars.STORE_FIREFOX_PDF }}
+          PUBLIC_STORE_CHROME_IMAGE: ${{ vars.STORE_CHROME_IMAGE }}
+          PUBLIC_STORE_EDGE_IMAGE: ${{ vars.STORE_EDGE_IMAGE }}
+          PUBLIC_STORE_FIREFOX_IMAGE: ${{ vars.STORE_FIREFOX_IMAGE }}
+          PUBLIC_STORE_CHROME_AUDIO: ${{ vars.STORE_CHROME_AUDIO }}
+          PUBLIC_STORE_EDGE_AUDIO: ${{ vars.STORE_EDGE_AUDIO }}
+          PUBLIC_STORE_FIREFOX_AUDIO: ${{ vars.STORE_FIREFOX_AUDIO }}
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/web/dist --project-name=${{ vars.CF_PAGES_PROJECT }} --commit-dirty=true

@@ -15,6 +15,11 @@ describe("TOOLS (pdf)", () => {
     expect(toolsBySuite("pdf").map((t) => t.id).sort()).toEqual([...PDF_IDS].sort());
   });
 
+  it("image 스위트에 4개 도구가 있고 heic-to-jpg 는 jpeg 프리셋이다", () => {
+    expect(toolsBySuite("image").map((t) => t.id).sort()).toEqual(["compress-image", "convert-image", "heic-to-jpg", "resize-image"]);
+    expect(toolsBySuite("image").find((t) => t.id === "heic-to-jpg")?.preset).toEqual({ to: "jpeg" });
+  });
+
   it("모든 도구가 en/ko 이름·설명·키워드를 가진다", () => {
     for (const tool of TOOLS) {
       for (const dict of [en, ko] as unknown as Record<string, Record<string, unknown>>[]) {

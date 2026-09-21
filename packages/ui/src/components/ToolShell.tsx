@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import type { JobProgress, JobResult, RemoteCore, CoreApi } from "@filekit/core";
 import { progressProxy } from "@filekit/core";
 import type { LicenseClient, Quota, QuotaReason } from "@filekit/license";
@@ -16,6 +16,7 @@ export interface ToolShellProps {
   license: LicenseClient;
   quota: Quota;
   checkoutUrl?: string;
+  showHeader?: boolean;
 }
 
 type Phase = { kind: "idle" } | { kind: "running"; progress: JobProgress | null } | { kind: "done"; result: JobResult } | { kind: "error"; message: string };
@@ -26,13 +27,15 @@ function defaults(tool: ToolDefinition): Record<string, OptionValue> {
   return { ...out, ...tool.preset };
 }
 
-export function ToolShell({ locale, tool, core, license, quota, checkoutUrl }: ToolShellProps) {
+export function ToolShell({ locale, tool, core, license, quota, checkoutUrl, showHeader = true }: ToolShellProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [opts, setOpts] = useState(defaults(tool));
   const [phase, setPhase] = useState<Phase>({ kind: "idle" });
   const [tier, setTier] = useState<"free" | "pro">("free");
   const [remaining, setRemaining] = useState(0);
   const [quotaReason, setQuotaReason] = useState<QuotaReason | null>(null);
+  /** 워커 진행률 콜백은 결과보다 늦게 도착할 수 있어(별도 MessageChannel) 실행 중일 때만 반영한다. */
+  const active = useRef(false);
 
   const refreshQuota = async () => {
     const state = await license.getState();
@@ -48,13 +51,16 @@ export function ToolShell({ locale, tool, core, license, quota, checkoutUrl }: T
     if (!check.ok) { setQuotaReason(check.reason); return; }
     setQuotaReason(null);
     setPhase({ kind: "running", progress: null });
+    active.current = true;
     try {
-      const onProgress = progressProxy((p) => setPhase({ kind: "running", progress: p }));
+      const onProgress = progressProxy((p) => { if (active.current) setPhase({ kind: "running", progress: p }); });
       const result = await tool.run(files, opts, onProgress, core as unknown as CoreApi);
+      active.current = false;
       await quota.record();
       setPhase({ kind: "done", result });
       await refreshQuota();
     } catch (err) {
+      active.current = false;
       const code = (err as { code?: string }).code;
       const message = code ? t(locale, `errors.${code}`, { message: (err as Error).message }) : (err as Error).message;
       setPhase({ kind: "error", message });
@@ -65,10 +71,12 @@ export function ToolShell({ locale, tool, core, license, quota, checkoutUrl }: T
 
   return (
     <div class="ff-shell" data-testid={`tool-${tool.id}`}>
-      <header>
-        <h1>{t(locale, `tools.${tool.id}.name`)}</h1>
-        <p class="ff-note">{t(locale, `tools.${tool.id}.description`)}</p>
-      </header>
+      {showHeader && (
+        <header>
+          <h1>{t(locale, `tools.${tool.id}.name`)}</h1>
+          <p class="ff-note">{t(locale, `tools.${tool.id}.description`)}</p>
+        </header>
+      )}
       <DropZone locale={locale} accept={tool.accept} multiple={tool.multiple} files={files} onFiles={(f) => { setFiles(f); setPhase({ kind: "idle" }); setQuotaReason(null); }} />
       {visibleOptions.length > 0 && (
         <div class="ff-options">

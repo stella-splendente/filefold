@@ -10,6 +10,7 @@ export default defineConfig({
   output: "static",
   build: { inlineStylesheets: "auto" },
   vite: {
+    resolve: { dedupe: ["preact", "preact/hooks", "preact/jsx-runtime", "preact/compat"] },
     worker: { format: "es" },
     optimizeDeps: { exclude: ["pdfjs-dist"] },
   },

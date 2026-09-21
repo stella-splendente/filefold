@@ -1,0 +1,72 @@
+name: release-ext
+# 태그 ext-<suite>@x.y.z 를 푸시하면 해당 스위트를 세 스토어에 업로드·게시 요청한다.
+# 첫 등록은 각 스토어 대시보드에서 사람이 한 번 해야 한다 (docs/SETUP.md).
+on:
+  push:
+    tags: ["ext-*@*"]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - id: meta
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          suite="${tag%%@*}"; suite="${suite#ext-}"
+          version="${tag##*@}"
+          echo "suite=$suite" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "app=ext-$suite" >> "$GITHUB_OUTPUT"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Check version matches package.json
+        run: |
+          pkg=$(node -p "require('./apps/${{ steps.meta.outputs.app }}/package.json').version")
+          [ "$pkg" = "${{ steps.meta.outputs.version }}" ] || { echo "package.json version $pkg != tag ${{ steps.meta.outputs.version }}"; exit 1; }
+      - run: pnpm --filter ${{ steps.meta.outputs.app }} build:all
+        env:
+          VITE_POLAR_ORG_ID: ${{ vars.POLAR_ORG_ID }}
+          VITE_POLAR_BENEFITS: ${{ vars.POLAR_BENEFITS }}
+          VITE_POLAR_CHECKOUT_PDF: ${{ vars.POLAR_CHECKOUT_PDF }}
+          VITE_POLAR_CHECKOUT_IMAGE: ${{ vars.POLAR_CHECKOUT_IMAGE }}
+          VITE_POLAR_CHECKOUT_AUDIO: ${{ vars.POLAR_CHECKOUT_AUDIO }}
+          VITE_POLAR_CHECKOUT_BUNDLE: ${{ vars.POLAR_CHECKOUT_BUNDLE }}
+      - name: Select store keys for this suite
+        id: keys
+        run: |
+          case "${{ steps.meta.outputs.suite }}" in
+            pdf)   echo 'keys<<EOF' >> "$GITHUB_OUTPUT"; echo '${{ secrets.BPP_KEYS_PDF }}' >> "$GITHUB_OUTPUT"; echo 'EOF' >> "$GITHUB_OUTPUT" ;;
+            image) echo 'keys<<EOF' >> "$GITHUB_OUTPUT"; echo '${{ secrets.BPP_KEYS_IMAGE }}' >> "$GITHUB_OUTPUT"; echo 'EOF' >> "$GITHUB_OUTPUT" ;;
+            audio) echo 'keys<<EOF' >> "$GITHUB_OUTPUT"; echo '${{ secrets.BPP_KEYS_AUDIO }}' >> "$GITHUB_OUTPUT"; echo 'EOF' >> "$GITHUB_OUTPUT" ;;
+          esac
+      - name: Publish to Chrome, Edge, Firefox
+        uses: PlasmoHQ/bpp@v3
+        with:
+          keys: ${{ steps.keys.outputs.keys }}
+          chrome-file: apps/${{ steps.meta.outputs.app }}/.output/${{ steps.meta.outputs.app }}-${{ steps.meta.outputs.version }}-chrome.zip
+          edge-file: apps/${{ steps.meta.outputs.app }}/.output/${{ steps.meta.outputs.app }}-${{ steps.meta.outputs.version }}-edge.zip
+          firefox-file: apps/${{ steps.meta.outputs.app }}/.output/${{ steps.meta.outputs.app }}-${{ steps.meta.outputs.version }}-firefox.zip
+          source-file: apps/${{ steps.meta.outputs.app }}/.output/${{ steps.meta.outputs.app }}-${{ steps.meta.outputs.version }}-sources.zip
+          version-file: apps/${{ steps.meta.outputs.app }}/package.json
+          verbose: true
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: `release failed: ${process.env.GITHUB_REF_NAME}`,
+              body: `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\n스토어 게시 실패. 로그를 확인하고 재시도하거나 리스팅을 수정하세요.`,
+              labels: ["release"],
+            });

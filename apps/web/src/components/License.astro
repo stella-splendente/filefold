@@ -9,6 +9,6 @@ const alternates = [{ locale: "en" as Locale, path: "/license/" }, { locale: "ko
 ---
 <Base locale={locale} title={`${t(locale, "license.title")} — ${t(locale, "brand")}`} description={t(locale, "tagline")} alternates={alternates}>
   <div class="ff-shell">
-    <LicenseIsland client:load locale={locale} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkoutUrl("pdf")} bundleUrl={BUNDLE_URL} />
+    <LicenseIsland client:only="preact" locale={locale} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkoutUrl("pdf")} bundleUrl={BUNDLE_URL} />
   </div>
 </Base>

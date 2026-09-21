@@ -28,5 +28,5 @@ export default function ToolIsland({ locale, toolId, orgId, benefits, checkoutUr
     return { core: createCore(), license: new LicenseClient({ organizationId: orgId, benefits: map, store }), quota: new Quota(store) };
   }, [orgId, benefits]);
   if (!tool) return null;
-  return <ToolShell locale={locale} tool={tool} core={rt.core} license={rt.license} quota={rt.quota} checkoutUrl={checkoutUrl} />;
+  return <ToolShell locale={locale} tool={tool} core={rt.core} license={rt.license} quota={rt.quota} checkoutUrl={checkoutUrl} showHeader={false} />;
 }

@@ -17,7 +17,7 @@ export default defineConfig({
     { name: "web", testMatch: /(web|visual|a11y)\.spec\.ts/, use: { baseURL: "http://127.0.0.1:4321" } },
   ],
   webServer: hasWeb ? {
-    command: "pnpm --filter web preview --host 127.0.0.1 --port 4321",
+    command: "pnpm --filter @filekit/ui exec vite preview --outDir ../../apps/web/dist --host 127.0.0.1 --port 4321 --strictPort",
     url: "http://127.0.0.1:4321",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

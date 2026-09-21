@@ -1,0 +1,1 @@
+{ "extends": "./.wxt/tsconfig.json", "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact", "strict": true, "skipLibCheck": true, "resolveJsonModule": true, "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"] }, "include": ["entrypoints", ".wxt/wxt.d.ts"] }

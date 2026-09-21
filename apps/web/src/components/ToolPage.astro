@@ -15,7 +15,11 @@ const stores = (["chrome", "edge", "firefox"] as const).map((b) => ({ b, url: st
 const checkout = checkoutUrl(tool.suite);
 ---
 <Base locale={locale} title={toolTitle(locale, tool)} description={toolDescription(locale, tool)} alternates={alternates} jsonLd={toolJsonLd(locale, tool, url)}>
-  <ToolIsland client:load locale={locale} toolId={tool.id} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkout} />
+  <header class="ff-shell" style="padding-bottom: 0;">
+    <h1 style="margin: 0;">{t(locale, `tools.${tool.id}.name`)}</h1>
+    <p class="ff-note" style="margin: 0;">{t(locale, `tools.${tool.id}.description`)}</p>
+  </header>
+  <ToolIsland client:only="preact" locale={locale} toolId={tool.id} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkout} />
 
   {stores.length > 0 && (
     <section aria-labelledby="install-title" style="margin-top: 2rem;">

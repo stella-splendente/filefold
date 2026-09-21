@@ -58,22 +58,76 @@
     "degrees": "Rotate by",
     "pages": "Pages (e.g. 1,3-5)",
     "ranges": "Ranges (e.g. 1-2,3-5)",
-    "order": "New order (e.g. 3,1,2)"
+    "order": "New order (e.g. 3,1,2)",
+    "width": "Width (px)",
+    "height": "Height (px, 0 = auto)",
+    "fit": "Fit",
+    "fitContain": "Fit inside",
+    "fitCover": "Fill and crop"
   },
   "suites": {
-    "pdf": { "name": "PDF Tools", "description": "Merge, split, compress and convert PDFs in your browser." },
-    "image": { "name": "Image Tools", "description": "Convert, compress and resize images in your browser." },
-    "audio": { "name": "Audio Tools", "description": "Convert, trim and compress audio in your browser." }
+    "pdf": {
+      "name": "PDF Tools",
+      "description": "Merge, split, compress and convert PDFs in your browser."
+    },
+    "image": {
+      "name": "Image Tools",
+      "description": "Convert, compress and resize images in your browser."
+    },
+    "audio": {
+      "name": "Audio Tools",
+      "description": "Convert, trim and compress audio in your browser."
+    }
   },
   "tools": {
-    "merge-pdf": { "name": "Merge PDF", "description": "Combine several PDFs into one, in the order you choose." },
-    "split-pdf": { "name": "Split PDF", "description": "Extract page ranges into separate PDFs." },
-    "compress-pdf": { "name": "Compress PDF", "description": "Shrink a PDF by re-rendering pages at a lower quality." },
-    "images-to-pdf": { "name": "Images to PDF", "description": "Turn JPG and PNG images into one PDF." },
-    "pdf-to-images": { "name": "PDF to Images", "description": "Export every page as a PNG or JPG." },
-    "rotate-pdf": { "name": "Rotate PDF", "description": "Rotate all pages or just the ones you pick." },
-    "reorder-pdf-pages": { "name": "Reorder PDF Pages", "description": "Put pages in a new order." },
-    "delete-pdf-pages": { "name": "Delete PDF Pages", "description": "Remove pages you don't need." }
+    "merge-pdf": {
+      "name": "Merge PDF",
+      "description": "Combine several PDFs into one, in the order you choose."
+    },
+    "split-pdf": {
+      "name": "Split PDF",
+      "description": "Extract page ranges into separate PDFs."
+    },
+    "compress-pdf": {
+      "name": "Compress PDF",
+      "description": "Shrink a PDF by re-rendering pages at a lower quality."
+    },
+    "images-to-pdf": {
+      "name": "Images to PDF",
+      "description": "Turn JPG and PNG images into one PDF."
+    },
+    "pdf-to-images": {
+      "name": "PDF to Images",
+      "description": "Export every page as a PNG or JPG."
+    },
+    "rotate-pdf": {
+      "name": "Rotate PDF",
+      "description": "Rotate all pages or just the ones you pick."
+    },
+    "reorder-pdf-pages": {
+      "name": "Reorder PDF Pages",
+      "description": "Put pages in a new order."
+    },
+    "delete-pdf-pages": {
+      "name": "Delete PDF Pages",
+      "description": "Remove pages you don't need."
+    },
+    "convert-image": {
+      "name": "Convert Image",
+      "description": "Convert between JPG, PNG, WebP, AVIF and HEIC, right in your browser."
+    },
+    "heic-to-jpg": {
+      "name": "HEIC to JPG",
+      "description": "Turn iPhone HEIC photos into JPG files without uploading them."
+    },
+    "compress-image": {
+      "name": "Compress Image",
+      "description": "Make photos smaller while keeping them sharp."
+    },
+    "resize-image": {
+      "name": "Resize Image",
+      "description": "Scale images to an exact width or height."
+    }
   },
   "faq": {
     "q1": "Are my files uploaded anywhere?",

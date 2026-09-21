@@ -1,0 +1,12 @@
+import { chromium } from "@playwright/test";
+const browser = await chromium.launch({ channel: "chromium" });
+const page = await browser.newPage();
+page.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") console.log("[console." + m.type() + "]", m.text().slice(0, 400)); });
+page.on("pageerror", (e) => console.log("[pageerror]", e.message.slice(0, 500)));
+page.on("requestfailed", (r) => console.log("[requestfailed]", r.url(), r.failure()?.errorText));
+page.on("response", (r) => { if (r.status() >= 400) console.log("[http " + r.status() + "]", r.url()); });
+await page.goto("http://127.0.0.1:4321/merge-pdf/");
+await page.waitForTimeout(5000);
+console.log("has island:", await page.locator('[data-testid="tool-merge-pdf"]').count());
+console.log("astro-island count:", await page.locator("astro-island").count());
+await browser.close();
