@@ -2,26 +2,116 @@
 import { TOOLS, t, type Locale } from "@filekit/ui";
 import Base from "../layouts/Base.astro";
 import { homePath, toolPath } from "../lib/routes";
+import { storeUrl } from "../lib/env";
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
+const ko = locale === "ko";
 const alternates = (["en", "ko"] as Locale[]).map((l) => ({ locale: l, path: homePath(l) }));
-const suites = ["pdf", "image", "audio"] as const;
+const suites = [
+  { id: "pdf", color: "oklch(62% 0.17 25)", n: "01" },
+  { id: "image", color: "oklch(60% 0.15 250)", n: "02" },
+  { id: "audio", color: "oklch(58% 0.16 300)", n: "03" },
+] as const;
+const stores = (["chrome", "edge", "firefox"] as const).map((b) => ({ b, url: storeUrl(b, "pdf") })).filter((s) => s.url);
+const copy = ko
+  ? {
+      eyebrow: "브라우저에서 끝나는 파일 도구",
+      h1a: "파일은 여기서 처리되고,", h1b: "여기서 끝납니다.",
+      lede: "PDF, 이미지, 오디오를 업로드 없이 브라우저 안에서 바로 다룹니다. 계정도, 서버도, 기다림도 없습니다.",
+      cta1: "도구 열기", cta2: "확장 프로그램",
+      p1: ["업로드 없음", "파일은 기기 밖으로 나가지 않습니다. 받을 서버 자체가 없습니다."],
+      p2: ["계정 없음", "열면 바로 씁니다. 가입도 로그인도 없습니다."],
+      p3: ["한 번 사면 끝", "Pro는 월정액이 아니라 일회성 구매입니다."],
+      install: ["같은 도구를 브라우저에 붙여 두기", "확장 프로그램으로 설치하면 오프라인에서도 동작하고 툴바에서 바로 엽니다."],
+      free: "무료로 시작", soon: "곧 Chrome · Edge · Firefox 스토어에", ext: "확장 프로그램", principles: "원칙",
+    }
+  : {
+      eyebrow: "File tools that finish in your browser",
+      h1a: "Your files are handled here,", h1b: "and stay here.",
+      lede: "Work with PDF, image and audio files right in the browser. No upload, no account, no waiting on a server.",
+      cta1: "Open a tool", cta2: "Get the extension",
+      p1: ["No upload", "Files never leave your device. There is no server to receive them."],
+      p2: ["No account", "Open it and use it. Nothing to sign up for."],
+      p3: ["Pay once", "Pro is a one-time purchase, not a subscription."],
+      install: ["Keep the same tools in your browser", "Install the extension to work offline and open tools from your toolbar."],
+      free: "Free to start", soon: "Coming to Chrome · Edge · Firefox", ext: "Browser extension", principles: "Principles",
+    };
+const storeName = { chrome: "Chrome", edge: "Edge", firefox: "Firefox" } as const;
 ---
-<Base locale={locale} title={`${t(locale, "brand")} — ${t(locale, "tagline")}`} description={t(locale, "suites.pdf.description")} alternates={alternates}>
-  <h1 style="font-size: clamp(2rem, 1rem + 4vw, 3.5rem); line-height: 1.1; margin: 1rem 0 .5rem;">{t(locale, "tagline")}</h1>
-  <p class="ff-note" style="font-size: 1.1rem; max-width: 40ch;">{t(locale, "common.privacyNote")}</p>
+<Base locale={locale} title={`${t(locale, "brand")} — ${t(locale, "tagline")}`} description={copy.lede} alternates={alternates}>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div>
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1 id="hero-heading" class="display">{copy.h1a} <em>{copy.h1b}</em></h1>
+      <p class="lede">{copy.lede}</p>
+      <div class="cta">
+        <a class="btn btn-primary" href={toolPath(locale, "merge-pdf")}>{copy.cta1} →</a>
+        <a class="btn btn-quiet" href="#install">{copy.cta2}</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 400 300" fill="none">
+        <g class="sheet" transform="translate(150 70) rotate(6 100 120)">
+          <rect width="200" height="240" rx="10" fill="oklch(93% 0.02 85)" stroke="var(--line)"/>
+          <path d="M160 0v40h40" fill="oklch(88% 0.025 85)"/>
+        </g>
+        <g class="sheet" transform="translate(120 50) rotate(-3 100 120)">
+          <rect width="200" height="240" rx="10" fill="oklch(96% 0.015 85)" stroke="var(--line)"/>
+          <path d="M160 0v40h40" fill="oklch(90% 0.02 85)"/>
+          <g stroke="var(--ink-faint)" stroke-width="3" stroke-linecap="round"><path d="M30 80h120M30 104h140M30 128h90M30 152h130"/></g>
+        </g>
+        <g class="sheet" transform="translate(90 30)">
+          <rect width="200" height="240" rx="10" fill="var(--paper)" stroke="var(--line)"/>
+          <path d="M160 0v40h40" fill="var(--paper-2)"/>
+          <rect x="30" y="70" width="140" height="90" rx="6" fill="var(--accent-wash)"/>
+          <circle cx="62" cy="100" r="9" fill="var(--accent)"/>
+          <path d="M40 152l36-40 22 24 18-18 36 34z" fill="var(--accent)" opacity=".85"/>
+          <g stroke="var(--ink-faint)" stroke-width="3" stroke-linecap="round"><path d="M30 190h110M30 212h70"/></g>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="principles" aria-label={copy.principles}>
+    {[copy.p1, copy.p2, copy.p3].map(([h, p]) => <div><strong>{h}</strong><p>{p}</p></div>)}
+  </section>
+
   {suites.map((s) => {
-    const tools = TOOLS.filter((x) => x.suite === s);
+    const tools = TOOLS.filter((x) => x.suite === s.id);
     return tools.length > 0 && (
-      <section aria-labelledby={`suite-${s}`} style="margin-top: 2.5rem;">
-        <h2 id={`suite-${s}`}>{t(locale, `suites.${s}.name`)}</h2>
-        <ul class="ff-list">
-          {tools.map((x) => (
-            <li><a class="ff-card" href={toolPath(locale, x.id)}><h3>{t(locale, `tools.${x.id}.name`)}</h3><p>{t(locale, `tools.${x.id}.description`)}</p></a></li>
+      <section class="suite" aria-labelledby={`suite-${s.id}`} style={`--suite-color:${s.color}`}>
+        <div class="suite-head">
+          <div class="suite-index">{s.n} / 03</div>
+          <h2 id={`suite-${s.id}`} class="display">{t(locale, `suites.${s.id}.name`)}</h2>
+          <p>{t(locale, `suites.${s.id}.description`)}</p>
+          <span class="pill"><i></i>{copy.free}</span>
+        </div>
+        <ol class="tool-index">
+          {tools.map((x, i) => (
+            <li>
+              <a href={toolPath(locale, x.id)}>
+                <span class="n">{String(i + 1).padStart(2, "0")}</span>
+                <span class="t">{t(locale, `tools.${x.id}.name`)}<span class="d">{t(locale, `tools.${x.id}.description`)}</span></span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
           ))}
-        </ul>
+        </ol>
       </section>
     );
   })}
+
+  <section id="install" class="install" aria-labelledby="install-heading">
+    <div>
+      <p class="eyebrow">{copy.ext}</p>
+      <h2 id="install-heading" class="display">{copy.install[0]}</h2>
+      <p>{copy.install[1]}</p>
+    </div>
+    <div class="stores">
+      {stores.length > 0
+        ? stores.map((s) => <a class="btn btn-quiet" href={s.url} rel="noopener">{storeName[s.b]}</a>)
+        : <span class="pill">{copy.soon}</span>}
+    </div>
+  </section>
 </Base>

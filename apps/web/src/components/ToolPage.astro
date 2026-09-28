@@ -8,39 +8,55 @@ import { POLAR_BENEFITS, POLAR_ORG_ID, checkoutUrl, storeUrl } from "../lib/env"
 
 interface Props { locale: Locale; tool: ToolDefinition }
 const { locale, tool } = Astro.props;
+const ko = locale === "ko";
 const alternates = (["en", "ko"] as Locale[]).map((l) => ({ locale: l, path: toolPath(l, tool.id) }));
 const url = new URL(toolPath(locale, tool.id), Astro.site).toString();
 const others = toolsBySuite(tool.suite).filter((x) => x.id !== tool.id);
 const stores = (["chrome", "edge", "firefox"] as const).map((b) => ({ b, url: storeUrl(b, tool.suite) })).filter((s) => s.url);
 const checkout = checkoutUrl(tool.suite);
+const suiteColor = { pdf: "oklch(62% 0.17 25)", image: "oklch(60% 0.15 250)", audio: "oklch(58% 0.16 300)" }[tool.suite];
+const storeName = { chrome: "Chrome", edge: "Edge", firefox: "Firefox" } as const;
 ---
 <Base locale={locale} title={toolTitle(locale, tool)} description={toolDescription(locale, tool)} alternates={alternates} jsonLd={toolJsonLd(locale, tool, url)}>
-  <header class="ff-shell" style="padding-bottom: 0;">
-    <h1 style="margin: 0;">{t(locale, `tools.${tool.id}.name`)}</h1>
-    <p class="ff-note" style="margin: 0;">{t(locale, `tools.${tool.id}.description`)}</p>
+  <header class="tool-hero" style={`--suite-color:${suiteColor}`}>
+    <span class="pill"><i></i>{t(locale, `suites.${tool.suite}.name`)}</span>
+    <h1 class="display">{t(locale, `tools.${tool.id}.name`)}</h1>
+    <p class="lede">{t(locale, `tools.${tool.id}.description`)}</p>
   </header>
-  <ToolIsland client:only="preact" locale={locale} toolId={tool.id} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkout} />
+
+  <div class="panel">
+    <ToolIsland client:only="preact" locale={locale} toolId={tool.id} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkout} />
+  </div>
 
   {stores.length > 0 && (
-    <section aria-labelledby="install-title" style="margin-top: 2rem;">
-      <h2 id="install-title">{t(locale, "common.installExtension")}</h2>
-      <p>{stores.map((s) => <a class="ff-btn ff-btn--ghost" href={s.url} rel="noopener" style="margin-right:.5rem">{s.b}</a>)}</p>
+    <section class="section install" aria-labelledby="install-title">
+      <div>
+        <p class="eyebrow">{ko ? "확장 프로그램" : "Browser extension"}</p>
+        <h2 id="install-title" class="display">{t(locale, "common.installExtension")}</h2>
+      </div>
+      <div class="stores">{stores.map((s) => <a class="btn btn-quiet" href={s.url} rel="noopener">{storeName[s.b]}</a>)}</div>
     </section>
   )}
 
-  <section aria-labelledby="faq-title" style="margin-top: 2rem;">
-    <h2 id="faq-title">FAQ</h2>
+  <section class="section faq" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="display">FAQ</h2>
     {[1, 2, 3].map((n) => (
-      <details><summary><strong>{t(locale, `faq.q${n}`)}</strong></summary><p>{t(locale, `faq.a${n}`)}</p></details>
+      <details><summary>{t(locale, `faq.q${n}`)}</summary><p>{t(locale, `faq.a${n}`)}</p></details>
     ))}
   </section>
 
-  <section aria-labelledby="others-title" style="margin-top: 2rem;">
-    <h2 id="others-title">{t(locale, "common.otherTools")}</h2>
-    <ul class="ff-list">
-      {others.map((x) => (
-        <li><a class="ff-card" href={toolPath(locale, x.id)}><h3>{t(locale, `tools.${x.id}.name`)}</h3><p>{t(locale, `tools.${x.id}.description`)}</p></a></li>
+  <section class="section" aria-labelledby="others-title" style={`--suite-color:${suiteColor}`}>
+    <h2 id="others-title" class="display">{t(locale, "common.otherTools")}</h2>
+    <ol class="tool-index">
+      {others.map((x, i) => (
+        <li>
+          <a href={toolPath(locale, x.id)}>
+            <span class="n">{String(i + 1).padStart(2, "0")}</span>
+            <span class="t">{t(locale, `tools.${x.id}.name`)}<span class="d">{t(locale, `tools.${x.id}.description`)}</span></span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
       ))}
-    </ul>
+    </ol>
   </section>
 </Base>

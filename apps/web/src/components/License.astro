@@ -8,7 +8,7 @@ const { locale } = Astro.props;
 const alternates = [{ locale: "en" as Locale, path: "/license/" }, { locale: "ko" as Locale, path: "/ko/license/" }];
 ---
 <Base locale={locale} title={`${t(locale, "license.title")} — ${t(locale, "brand")}`} description={t(locale, "tagline")} alternates={alternates}>
-  <div class="ff-shell">
+  <div class="panel" style="max-width: 720px; margin: 2.5rem auto;">
     <LicenseIsland client:only="preact" locale={locale} orgId={POLAR_ORG_ID} benefits={POLAR_BENEFITS} checkoutUrl={checkoutUrl("pdf")} bundleUrl={BUNDLE_URL} />
   </div>
 </Base>
