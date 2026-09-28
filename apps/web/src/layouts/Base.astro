@@ -26,6 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <link rel="icon" href="/icon-pdf.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#3b6fd6" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <style>

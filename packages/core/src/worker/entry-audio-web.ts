@@ -1,5 +1,5 @@
 import { expose } from "comlink";
-import "../audio/core-bundled";
+import "../audio/core-cdn";
 import { audioApi } from "./api-audio";
 
 expose(audioApi);

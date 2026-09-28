@@ -11,7 +11,8 @@
     "./worker/pdf": "./src/worker/entry-pdf.ts",
     "./worker/image": "./src/worker/entry-image.ts",
     "./worker/audio": "./src/worker/entry-audio.ts",
-    "./zip": "./src/zip.ts"
+    "./zip": "./src/zip.ts",
+    "./worker/audio-web": "./src/worker/entry-audio-web.ts"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.10",

@@ -1,0 +1,15 @@
+import { chromium } from "@playwright/test";
+import { makeWav } from "../../tests/fixtures/make-wav.ts";
+const browser = await chromium.launch({ channel: "chromium" });
+const page = await browser.newPage();
+page.on("pageerror", (e) => console.log("[pageerror]", e.message.slice(0, 300)));
+page.on("console", (m) => { if (m.type() === "error") console.log("[console.error]", m.text().slice(0, 300)); });
+await page.goto("http://127.0.0.1:4321/convert-audio/");
+await page.locator('[data-testid="tool-convert-audio"]').waitFor();
+await page.getByTestId("file-input").setInputFiles([{ name: "tone.wav", mimeType: "audio/wav", buffer: Buffer.from(makeWav(1)) }]);
+const t0 = Date.now();
+await page.getByTestId("run").click();
+await page.getByTestId("download").waitFor({ timeout: 120000 });
+console.log("download ready in", ((Date.now() - t0) / 1000).toFixed(1), "s");
+console.log("error:", await page.getByTestId("error").allTextContents());
+await browser.close();

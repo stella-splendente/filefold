@@ -1,22 +1,27 @@
-/// <reference path="../vite-env.d.ts" />
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { CoreError } from "../types";
 
 /**
  * ffmpeg.wasm 단일 스레드 코어. SharedArrayBuffer 불필요.
- * core js/wasm 은 번들 자산 URL 로 넘겨서(확장: chrome-extension://, 웹: 같은 origin) MV3 CSP 를 지킨다.
+ * 코어(js/wasm) 위치는 앱이 등록한다: 확장은 동봉 자산(core-bundled), 웹은 CDN(core-cdn).
+ * 웹에서 동봉하지 않는 이유는 정적 호스팅의 파일당 크기 제한(25MB) 때문이다.
  */
+export interface CoreSource { coreURL: string; wasmURL: string }
+let resolveSource: (() => Promise<CoreSource>) | null = null;
 let instance: Promise<FFmpeg> | null = null;
+
+export function registerFFmpegCore(resolver: () => Promise<CoreSource>): void {
+  resolveSource = resolver;
+  instance = null;
+}
 
 export function getFFmpeg(): Promise<FFmpeg> {
   if (!instance) {
     instance = (async () => {
+      if (!resolveSource) throw new CoreError("INTERNAL", "ffmpeg 코어 위치가 등록되지 않았습니다");
       const ffmpeg = new FFmpeg();
-      const [{ default: coreURL }, { default: wasmURL }] = await Promise.all([
-        import("@ffmpeg/core?url"),
-        import("@ffmpeg/core/wasm?url"),
-      ]);
-      const ok = await ffmpeg.load({ coreURL: absolute(coreURL), wasmURL: absolute(wasmURL) });
+      const { coreURL, wasmURL } = await resolveSource();
+      const ok = await ffmpeg.load({ coreURL, wasmURL });
       if (!ok) throw new CoreError("INTERNAL", "ffmpeg 엔진을 불러오지 못했습니다");
       return ffmpeg;
     })().catch((err) => {
@@ -25,10 +30,6 @@ export function getFFmpeg(): Promise<FFmpeg> {
     });
   }
   return instance;
-}
-
-function absolute(url: string): string {
-  return new URL(url, self.location.href).toString();
 }
 
 export interface RunOptions {

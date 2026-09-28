@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import "./core-bundled";
 import { wavBlob } from "../../../../tests/fixtures/make-wav";
 import { compressAudio, convertAudio, trimAudio } from "./index";
 

@@ -1,1 +1,1 @@
-import "@filekit/core/worker/audio";
+import "@filekit/core/worker/audio-web";
