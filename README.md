@@ -2,10 +2,7 @@
 
 브라우저 안에서만 동작하는 파일 도구. PDF·이미지·오디오 확장 프로그램 3종(Chrome/Edge/Firefox)과 같은 엔진을 쓰는 정적 도구 사이트. 파일은 기기를 떠나지 않고, 서버가 없다.
 
-- 설계: `docs/superpowers/specs/2026-09-21-filekit-design.md`
-- 구현 계획·진행: `docs/superpowers/plans/2026-09-21-filekit-v1.md`, `docs/PROGRESS.md`
-- 한 번만 하는 셋업(스토어·결제·호스팅): `docs/SETUP.md`
-- 시장 조사 근거: `docs/research/`
+- 스토어·결제·호스팅 셋업: `docs/SETUP.md`
 
 ## 구조
 
