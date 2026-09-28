@@ -32,13 +32,6 @@ jobs:
           pkg=$(node -p "require('./apps/${{ steps.meta.outputs.app }}/package.json').version")
           [ "$pkg" = "${{ steps.meta.outputs.version }}" ] || { echo "package.json version $pkg != tag ${{ steps.meta.outputs.version }}"; exit 1; }
       - run: pnpm --filter ${{ steps.meta.outputs.app }} build:all
-        env:
-          VITE_POLAR_ORG_ID: ${{ vars.POLAR_ORG_ID }}
-          VITE_POLAR_BENEFITS: ${{ vars.POLAR_BENEFITS }}
-          VITE_POLAR_CHECKOUT_PDF: ${{ vars.POLAR_CHECKOUT_PDF }}
-          VITE_POLAR_CHECKOUT_IMAGE: ${{ vars.POLAR_CHECKOUT_IMAGE }}
-          VITE_POLAR_CHECKOUT_AUDIO: ${{ vars.POLAR_CHECKOUT_AUDIO }}
-          VITE_POLAR_CHECKOUT_BUNDLE: ${{ vars.POLAR_CHECKOUT_BUNDLE }}
       - name: Select store keys for this suite
         id: keys
         run: |

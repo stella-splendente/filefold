@@ -4,8 +4,6 @@ dist/
 .wxt/
 .astro/
 coverage/
-.env
-.env.*
 .DS_Store
 test-results/
 playwright-report/
