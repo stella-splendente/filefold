@@ -55,12 +55,14 @@
    {"benefit_PDF_ID":["pdf"],"benefit_IMAGE_ID":["image"],"benefit_AUDIO_ID":["audio"],"benefit_BUNDLE_ID":["pdf","image","audio"]}
    ```
 
-## 5. Cloudflare Pages (15분, 무료)
+## 5. Cloudflare Pages (완료)
 
-1. https://dash.cloudflare.com 계정 생성 → Workers & Pages → "Create" → Pages → **Direct Upload** 로 프로젝트 이름 `filefold` 생성 (첫 업로드는 빈 폴더여도 됨).
-2. 프로필 → API Tokens → "Edit Cloudflare Workers" 템플릿으로 토큰 생성 → Secret `CLOUDFLARE_API_TOKEN`. 계정 ID(대시보드 우측)는 Secret `CLOUDFLARE_ACCOUNT_ID`.
-3. Variable `CF_PAGES_PROJECT` = `filefold`, `SITE_URL` = `https://filefold.pages.dev` (도메인을 사면 그때 교체).
-4. 푸시하면 `deploy-web` 워크플로가 배포합니다. 이후 Pages 프로젝트의 Web Analytics 를 켜면 방문 통계가 무료로 잡힙니다(쿠키 없음).
+Cloudflare Pages 프로젝트 `filefold`가 GitHub 저장소와 직접 연결되어 있습니다. `main`에 푸시하면 Cloudflare가 스스로 빌드·배포합니다. 별도 토큰이나 워크플로가 필요 없습니다.
+
+- 주소: https://filefold.pages.dev (도메인을 사면 Pages 프로젝트 → Custom domains 에서 연결하고 환경변수 `SITE_URL`만 바꿉니다)
+- 빌드 설정: 명령 `pnpm --filter web build`, 출력 `apps/web/dist`, 환경변수 `NODE_VERSION=24`, `SITE_URL=https://filefold.pages.dev`
+- 사이트에서 쓰는 Polar·스토어 링크는 같은 화면의 환경변수에 `PUBLIC_POLAR_ORG_ID`, `PUBLIC_POLAR_BENEFITS`, `PUBLIC_POLAR_CHECKOUT_PDF|IMAGE|AUDIO|BUNDLE`, `PUBLIC_STORE_CHROME|EDGE|FIREFOX_PDF|IMAGE|AUDIO` 이름으로 넣습니다(4·6단계 값이 나온 뒤).
+- 방문 통계는 Pages 프로젝트의 Web Analytics 를 켜면 무료로 잡힙니다(쿠키 없음).
 
 ## 6. GitHub Secrets / Variables 정리표
 
@@ -69,14 +71,10 @@
 | `BPP_KEYS_PDF` | Secret | 아래 JSON (PDF 스위트용) |
 | `BPP_KEYS_IMAGE` | Secret | 같은 형식, image 스위트 ID들 |
 | `BPP_KEYS_AUDIO` | Secret | 같은 형식, audio 스위트 ID들 |
-| `CLOUDFLARE_API_TOKEN` | Secret | 5-2 |
-| `CLOUDFLARE_ACCOUNT_ID` | Secret | 5-2 |
-| `CF_PAGES_PROJECT` | Variable | `filefold` |
-| `SITE_URL` | Variable | `https://filefold.pages.dev` |
 | `POLAR_ORG_ID` | Variable | 4-4 |
 | `POLAR_BENEFITS` | Variable | 4-5 JSON |
 | `POLAR_CHECKOUT_PDF` 등 4개 | Variable | 4-3 |
-| `STORE_CHROME_PDF` 등 9개 | Variable | 각 스토어 URL (없으면 사이트에서 버튼 숨김) |
+| (사이트용 값은 Cloudflare Pages 환경변수에, 5단계 참고) | | |
 
 `BPP_KEYS_*` JSON 형식 (https://github.com/PlasmoHQ/bpp 와 동일):
 ```json
