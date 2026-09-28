@@ -14,7 +14,8 @@ export default defineConfig({
     { name: "ext-pdf", testMatch: /ext-pdf\.spec\.ts/ },
     { name: "ext-image", testMatch: /ext-image\.spec\.ts/ },
     { name: "ext-audio", testMatch: /ext-audio\.spec\.ts/ },
-    { name: "web", testMatch: /(web|visual|a11y)\.spec\.ts/, use: { baseURL: "http://127.0.0.1:4321" } },
+    // 시각 회귀 스냅샷은 OS 별 글꼴 차이로 CI(Linux)에서 어긋나므로 로컬(macOS)에서만 비교한다.
+    { name: "web", testMatch: /(web|visual|a11y)\.spec\.ts/, testIgnore: process.env.CI ? /visual\.spec\.ts/ : [], use: { baseURL: "http://127.0.0.1:4321" } },
   ],
   webServer: hasWeb ? {
     command: "pnpm --filter @filekit/ui exec vite preview --outDir ../../apps/web/dist --host 127.0.0.1 --port 4321 --strictPort",
