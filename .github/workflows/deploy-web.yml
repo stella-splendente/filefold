@@ -9,6 +9,7 @@ permissions:
   deployments: write
 jobs:
   deploy:
+    if: vars.CF_PAGES_PROJECT != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
