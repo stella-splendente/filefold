@@ -25,7 +25,6 @@ export function DropZone({ locale, accept, multiple, files, onFiles }: Props) {
         class="ff-drop"
         role="button"
         tabIndex={0}
-        aria-label={t(locale, "common.dropHere")}
         data-over={over}
         onClick={() => input.current?.click()}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.current?.click(); } }}
